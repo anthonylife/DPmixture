@@ -17,9 +17,9 @@ function data = gendata(numdata, numclass, biasmean, dim)
 %   Date: 12/4/2012
 
 
-% components setting
 N = 200;    % maximum of data points
 
+% components setting
 data.dim = dim;
 if length(numdata) == 1 & numdata ~= 0,
     data.numclass = numclass;

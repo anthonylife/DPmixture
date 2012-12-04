@@ -22,6 +22,7 @@ crp.classnd = repmat(0, data.numdata, 1);
 crp.classpara = repmat(0, data.numdata, dim);
 crp.alpha = alpha;
 
+probs=
 % partition data based on simulating users choosing tables
 for ii=randperm(data.numdata),
     % no users being assigned to a specific category
@@ -30,7 +31,11 @@ for ii=randperm(data.numdata),
         crp.classnd(1) = 1;
         crp.prenumclass = 1;
     else,
-        probs = 
+        for jj=1:crp.prenumclass,
+            probs(jj) = multigaussian(data.ss(ii), crp.classpara(jj), 1, 'z_old');
+        end
+        probs(1:crp.prenumclass) = crp.classnd(1:crp.prenumclass).*probs./(data.numdata+crp.alpha-1);
+        pro
         crp.predataclass(ii) = randmult();
         crp.classnd(crp.predataclass(ii)) = crp.classnd(crp.predataclass(ii)) + 1;
     end    
