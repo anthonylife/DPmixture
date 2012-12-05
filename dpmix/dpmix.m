@@ -19,9 +19,11 @@
 
 % (1)==============================================
 % global variable and model hyper-parameter setting
+%if 0,
 numiter = 50;
-alpha = 5
+alpha = 0.5;
 timeinterval = 5;
+infer_choice = 'GS';    % infer_choice means which inference method to choose
 
 % evaluation results
 clusters = repmat(0, numiter, 1);
@@ -32,12 +34,12 @@ M_dis2 = repmat(0, numiter, 1);
 % synthetic data related variables setting
 numclass = 3;
 numdata = [100 100 100];
-biasmean = [2.4, 2; -1.8, 1.4; -0.2, -2.6];
 datadim = 2;
+gaussianmean = [2.4, 2; -1.8, 1.4; -0.2, -2.6];
 
 % data generation
 global data;
-data = gendata(numdata, numclass, biasmean, dim);
+data = gendata(numdata, numclass, gaussianmean, datadim);
 
 % randomly partition data
 global crp;
@@ -45,22 +47,24 @@ crp = init_crp_v1(data, alpha);
 %crp = init_crp_v2(data, alpha);
 crp.numiter = numiter;
 
-
 % (2)=========================================
 % iterative calling CRP to infer the posterior
 tic;
 for iter=1:numiter,
-    dp_crp();
+    dp_crp(infer_choice);
     if rem(iter, timeinterval) == 0,
-        fprintf('Current iteration number: %d; Time cost: %fs...', iter, toc-tic);
+        fprintf('Current iteration number: %d; Time cost: %fs...\n', iter, toc-tic);
     end
     clusters(iter) = crp.prenumclass;
     % intermediate result evaluation
     [diff_cluster(iter), M_dis1(iter), M_dis2(iter)] = evaluation();
+    fprintf('Current number of clusters:%d,\n', clusters(iter));
+    fprintf('Difference between actual and expected number of clusters:%f,\n', diff_cluster(iter));
+    fprintf('Distance of mean to mean:%f,\n', M_dis1(iter));
+    fprintf('Distance of all data points to their centers:%f...\n', M_dis2(iter));
 end
-
+%end
 % (3)==============================
 % final evaluation and plot
-
-
+myplot(numiter, clusters, diff_cluster, M_dis1, M_dis2);
 

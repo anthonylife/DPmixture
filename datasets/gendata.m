@@ -1,4 +1,4 @@
-function data = gendata(numdata, numclass, biasmean, dim)
+function data = gendata(numdata, numclass, gaussianmean, dim)
 %
 %   GENDATA generates data accroding to different Gaussian
 %       functions.
@@ -10,7 +10,7 @@ function data = gendata(numdata, numclass, biasmean, dim)
 %           (3)length = 1 and numdata == 0, randly choose the
 %           number of data.
 %       numclass --> total number of class of the data. 
-%       biasmean --> mean value of Gaussian distribution.
+%       gaussianmean --> mean value of Gaussian distribution.
 %           In this test, bias mean is set in advance.
 %       dim --> number of dimensions of data.
 %
@@ -24,17 +24,17 @@ data.dim = dim;
 if length(numdata) == 1 & numdata ~= 0,
     data.numclass = numclass;
     data.numdata = repmat(numdata, 1, data.numclass);
-    data.biasmean = biasmean;
+    data.gaussianmean = gaussianmean;
 elseif length(numdata) > 1,
     data.numclass = numclass;
     data.numdata = numdata;
-    data.biasmean = biasmean;
+    data.gaussianmean = gaussianmean;
 elseif length(numdata) == 1 & numdata == 0,
     data.numclass = numclass;
     for ii=1:data.numclass,
         data.numdata(ii) = unidrnd(N);
     end
-    data.biasmean = biasmean;
+    data.gaussianmean = gaussianmean;
 end
 
 % data space allocation
@@ -42,12 +42,15 @@ data.ss = repmat(0.0, sum(data.numdata), data.dim);
 data.cc = repmat(0, sum(data.numdata), 1);
 
 % data generation
-data.ss(1:data.numdata(1)) = normrnd(0, 1, data.numdata(1), 2)...
-    + repmat(data.biasmean(1,:), data.numdata(1), 1);
+data.ss(1:data.numdata(1),:) = normrnd(0, 1, data.numdata(1), 2)...
+    + repmat(data.gaussianmean(1,:), data.numdata(1), 1);
 data.cc(1:data.numdata(1)) = 1;
-for ii =2:data.numclass,
-    data.ss(data.numdata(1)+1:data.numdata(2)) = normrnd(0, 1,...
-        data.numdata(ii), 2) + repmat(data.biasmean(ii,), data.numdata(ii),1);
-    data.cc(data.numdata(1)+1:data.numdata(2)) = ii;
-end
+start_idx = data.numdata(1);
 
+for ii =2:data.numclass,
+    data.ss(start_idx+1:start_idx+data.numdata(ii),:) = normrnd(0, 1,...
+        data.numdata(ii), 2) + repmat(data.gaussianmean(ii,:), data.numdata(ii),1);
+    data.cc(start_idx+1:start_idx+data.numdata(ii)) = repmat(ii, data.numdata(ii), 1);
+    start_idx = start_idx + data.numdata(ii);
+end
+data.numdata = sum(data.numdata);

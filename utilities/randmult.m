@@ -15,6 +15,7 @@ function idx = randmult(probs, numitem)
 
 
 rand('state', sum(100*clock));
-
+% normalize
+probs(1:numitem) = probs(1:numitem)./sum(probs(1:numitem));
 cumprobs = cumsum(probs(1:numitem));
 idx = find(cumprobs>rand, 1);

@@ -15,12 +15,12 @@ function crp = init_crp_v1(data, alpha)
 crp.predataclass = repmat(0, data.numdata, 1);
 crp.prenumclass = data.numdata;
 crp.classnd = repmat(0, data.numdata, 1);
-crp.classpara = repmat(0, data.numdata, 1);
+crp.classpara = repmat(0, data.numdata, data.dim);
 crp.alpha = alpha;
 
 % randomly partition data
 for ii=1:data.numdata,
-    crp.predataclass(ii) = randmult(repmat(1, 1, data.numdata)/data.numdata, data.numdata);
+    crp.predataclass(ii) = randmult(repmat(1, 1, data.numdata)./data.numdata, data.numdata);
     crp.classnd(crp.predataclass(ii)) = crp.classnd(crp.predataclass(ii)) + 1;
 end
 

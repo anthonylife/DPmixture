@@ -33,17 +33,17 @@ case 'GS'
             idx = find(crp.predataclass > cc);
             crp.predataclass(idx) = crp.predataclass(idx) - 1;
             crp.classnd(cc:end-1) = crp.classnd(cc+1:end);
-            crp.class(end) = 0;
+            crp.classnd(end) = 0;
         end
 
         % conditional probability
         for jj=1:crp.prenumclass,
-            probs(jj) = multigaussian(data.ss(ii,:)', crp.classpara(ii,:)', 0, 'z_old');
+            probs(jj) = multigaussian(data.ss(ii,:)', crp.classpara(jj,:)', 0, 'z_old');
         end
         probs(1:crp.prenumclass) = crp.classnd(1:crp.prenumclass).*probs(1:crp.prenumclass)...
             ./(data.numdata+crp.alpha-1);
-        probs(crp.prenumclass+1) = multigaussian(data.ss(ii,:)', 0, 0, 'z_new');
-        
+        probs(crp.prenumclass+1) = crp.alpha*multigaussian(data.ss(ii,:)', 0, 0, 'z_new')...
+            /(data.numdata+crp.alpha-1);
         % sample from multinomial distribution
         crp.predataclass(ii) = randmult(probs, crp.prenumclass+1);
         if crp.predataclass(ii) == crp.prenumclass + 1,
@@ -57,7 +57,7 @@ case 'GS'
     for ii=1:crp.prenumclass,
         % utilizing independence between each dimension
         sigma = 1/(1+crp.classnd(ii));
-        mu = sigma*sum(data.ss(find(crp.predataclass==ii)), 1);
+        mu = sigma*sum(data.ss(find(crp.predataclass==ii),:), 1);
         for jj=1:data.dim,
             crp.classpara(ii,jj) = normrnd(mu(jj), sigma, 1);
         end 
@@ -65,7 +65,7 @@ case 'GS'
 
 % Collapsed Gibbs Sampling
 case 'CGS'
-    disp('Have not implemented.');
+    disp('CGS has not been implemented.');
 
 otherwise
     error('Unknown choice');

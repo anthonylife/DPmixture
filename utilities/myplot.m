@@ -14,7 +14,12 @@ color = ['r', 'g', 'b', 'k', 'c', 'm', 'y'];
 shape = ['.', '*', 'x', 'square', 'o'];
 
 % (1)number of clusters
+%a = figure('position', [0 0 40 40])
 figure(1)
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'points');
+set(gcf, 'PaperPosition', [0 0 800 500]);
+
 plot(1:numiter, clusters, 'r*-');
 axis([0 50 0 10]);
 set(gca, 'XTick', 0:5:50);
@@ -26,11 +31,15 @@ print(1, '-djpeg', '../fig/numclusters.jpeg');
 
 % (2)figure of data partition
 figure(2);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'points');
+set(gcf, 'PaperPosition', [0 0 800 500]);
+
 hold on;
 for ii=1:crp.prenumclass,
-    is = (ii-1)/length(shape)+1;
-    ic = sem(ii-1, length(color))+1;
-    plot(data.ss(find(crp.predataclass == ii), 1), data.ss(find(crp.predataclass == ii), 2), color(ic), shape(is));
+    is = floor((ii-1)/length(shape))+1
+    ic = rem(ii-1, length(color))+1
+    plot(data.ss(find(crp.predataclass == ii), 1), data.ss(find(crp.predataclass == ii), 2), [color(ic),shape(is)]);
 end
 hold off;
 title('Data distribution');
@@ -38,6 +47,10 @@ print(2, '-djpeg', '../fig/dataclusters.jpeg');
 
 %(3-5)evaluation metrics 1-3
 figure(3);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'points');
+set(gcf, 'PaperPosition', [0 0 800 500]);
+
 plot(1:numiter, diff_cluster, 'r*-');
 axis([0 50 -10 30]);
 set(gca, 'YTick', -10:10:30);
@@ -48,6 +61,10 @@ ylabel('D(K, a)');
 print(3, '-djpeg', '../fig/diffclusters.jpeg');
 
 figure(4);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'points');
+set(gcf, 'PaperPosition', [0 0 800 500]);
+
 plot(1:numiter, M_dis1, 'r*-');
 axis([0 50 0 100]);
 set(gca, 'XTick', 0:5:50);
@@ -57,6 +74,10 @@ ylabel('M_dis1');
 print(4, '-djpeg', '../fig/M_dis1.jpeg');
 
 figure(5);
+set(gcf, 'PaperPositionMode', 'manual');
+set(gcf, 'PaperUnits', 'points');
+set(gcf, 'PaperPosition', [0 0 800 500]);
+
 plot(1:numiter, M_dis2, 'r*-');
 axis([0 50 0 1000]);
 set(gca, 'XTick', 0:5:50);
