@@ -18,6 +18,7 @@ M_dis1=sum(sqrt(sum(crp.classpara(1:crp.prenumclass,:).*crp.classpara(1:crp.pren
 % difference of all data points to their centers
 mu = repmat(0.0, data.numdata, data.dim);
 for ii=1:crp.prenumclass,
-    mu(find(crp.predataclass == ii),:) = repmat(sum(data.ss(find(crp.predataclass == ii),:), 1), length(find(crp.predataclass == ii)), 1);
+    mu(find(crp.predataclass == ii),:) = repmat(sum(data.ss(find(crp.predataclass == ii),:), 1)...
+        ./length(find(crp.predataclass == ii)), length(find(crp.predataclass == ii)), 1);
 end
 M_dis2 = sum(sqrt(sum((data.ss-mu).*(data.ss-mu), 2)), 1);
