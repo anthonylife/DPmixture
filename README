@@ -1,0 +1,77 @@
+Author: anthonylife
+Date: 12/5/2012
+===================
+
+This code is used to accomplish the task "DP mixture" in Advanced Machine
+Learning Course. Currently, I only achive the basic gibbs sampling method,
+levaing collapsed gibbs sampling as future work.
+
+I use Matlab because its convinence for concise code, debug, etc. In the
+following, I will introduce the (1)directory structure, (2)data generation,
+(3)CRP training, and (4)evaluation. Besides, how to run the code is also
+included.
+
+
+Directory Structure
+===================
+In this part, I will also clarify the main function of each file.
+
+| datasets
+    || gendata.m --> generate data to be used in DP mixture model.
+
+| dpmix
+    || dpmix.m --> main program, calling other functions to do initialization,
+        data generation, CRP inference, evaluation and plotting.
+    || dp_crp.m --> one iteration of CRP inference.
+    || init_crp_v1.m --> randomly partition data and get clusters.
+    || init_crp_v2.m --> similar as above except that this program simulates
+        the process of users entering restaurant from the first to the last
+        one to get the random partition.
+
+| utilities
+    || evaluation.m --> achieves the three evaluation metrics proposed by
+        teachers. However, I didn't understand the second metric well.
+    || multigaussian.m --> get the probability of points based on Gaussian
+        density distribution.
+    || randmult.m --> randomly generate samples from multinomial distribution.
+    || myplot.m --> output the evaluation results with fiture form.
+
+| fig
+    || dataclusters.jpeg --> each data point's category is shown.
+    || numclusters.jpeg --> number of clusters in each iteration when training.
+    || diffclusters.jpeg --> evaluation metric 1.
+    || M_dis1.jpeg --> evaluation metric 2.
+    || M_dis2.jpeg --> evaluation metric 3.
+
+How to run code
+===============
+After starting Matlab and entering the main directory, run the following
+commands in order.
+
+1. initpath
+2. cd dpmix
+3. dpmix
+
+
+Data generation
+===============
+I choose the same way as the slides introduces and sample them. Moreover,
+users can set related parameters in file 'dpmix.m'.
+
+
+How to sample Z and fai
+=======================
+The main procedures are introduced in the slides. From my perspective, I
+get the same results based on the following general idea.
+
+For each zi, first give the posterior formulation. Then utilize the conditional
+independence to simplify the formulation, i.e., only save the items related
+to zi and xi. Moreover, based on multinomial distribution and conjugate prior,
+we can get the final results.
+
+For each fai, choose the similar way as above.
+
+
+Final results
+=============
+The final results are drawn in figures, which are in the directory 'fig'.
