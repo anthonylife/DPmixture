@@ -24,6 +24,7 @@ alpha = 5
 timeinterval = 5;
 
 % evaluation results
+clusters = repmat(0, numiter, 1);
 diff_cluster = repmat(0, numiter, 1);
 M_dis1 = repmat(0, numiter, 1);
 M_dis2 = repmat(0, numiter, 1);
@@ -53,6 +54,7 @@ for iter=1:numiter,
     if rem(iter, timeinterval) == 0,
         fprintf('Current iteration number: %d; Time cost: %fs...', iter, toc-tic);
     end
+    clusters(iter) = crp.prenumclass;
     % intermediate result evaluation
     [diff_cluster(iter), M_dis1(iter), M_dis2(iter)] = evaluation();
 end
