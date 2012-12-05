@@ -39,7 +39,7 @@ end
 
 % data space allocation
 data.ss = repmat(0.0, sum(data.numdata), data.dim);
-data.dataclass = repmat(0, sum(data.numdata), 1);
+data.cc = repmat(0, sum(data.numdata), 1);
 
 % data generation
 data.ss(1:data.numdata(1)) = normrnd(0, 1, data.numdata(1), 2)...

@@ -1,4 +1,4 @@
-function idx = randmult(probs)
+function idx = randmult(probs, numitem)
 %
 %   RANDMULT randomly sample category index from multinomial
 %     distribution.
@@ -6,6 +6,7 @@ function idx = randmult(probs)
 %   Input variables:
 %       probs --> probability vector, with accumulated value
 %           equal to 1.
+%       numitem --> number of valid items
 %
 %   Output variables:
 %       idx --> sampled category id.
@@ -15,5 +16,5 @@ function idx = randmult(probs)
 
 rand('state', sum(100*clock));
 
-cumprobs = cumsum(probs);
+cumprobs = cumsum(probs(1:numitem));
 idx = find(cumprobs>rand, 1);

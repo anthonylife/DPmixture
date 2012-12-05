@@ -49,11 +49,12 @@ crp.numiter = numiter;
 % iterative calling CRP to infer the posterior
 tic;
 for iter=1:numiter,
-    iterate_crp();
+    dp_crp();
     if rem(iter, timeinterval) == 0,
         fprintf('Current iteration number: %d; Time cost: %fs...', iter, toc-tic);
     end
-    
+    % intermediate result evaluation
+    [diff_cluster(iter), M_dis1(iter), M_dis2(iter)] = evaluation();
 end
 
 % (3)==============================

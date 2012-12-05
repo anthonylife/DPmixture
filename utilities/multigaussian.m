@@ -20,7 +20,7 @@ dim = length(x);
 switch choice
 case 'z_new'
     prob = 1/(2*pi)^(dim/2)*det(inv(2.*eye(dim)))^(1/2) * ...
-        exp(-1/2*x'*eye(dim)*x)
+        exp(-1/2*x'*(1/2.*eye(dim))*x)
 case 'z_old'
     prob = 1/(2*pi)^(dim/2)*exp(-1/2*(x-mu)'*(x-mu));
 case 'fai'
