@@ -1,4 +1,4 @@
-function crp = init_crp(data, alpha, dim)
+function crp = init_crp_v2(data, alpha, dim)
 %
 %   INITCRP doing some initialization work for CRP, including
 %     partitioning data based on the start of CRP. This is different
@@ -22,7 +22,7 @@ crp.classnd = repmat(0, data.numdata, 1);
 crp.classpara = repmat(0, data.numdata, dim);
 crp.alpha = alpha;
 
-probs=
+probs = repmat(0.0, data.numdata, 1);
 % partition data based on simulating users choosing tables
 for ii=randperm(data.numdata),
     % no users being assigned to a specific category
@@ -32,26 +32,16 @@ for ii=randperm(data.numdata),
         crp.prenumclass = 1;
     else,
         for jj=1:crp.prenumclass,
-            probs(jj) = multigaussian(data.ss(ii), crp.classpara(jj), 1, 'z_old');
+            probs(jj) = multigaussian(data.ss(ii,:)', crp.classpara(jj,:)', 0, 'z_old');
         end
-        probs(1:crp.prenumclass) = crp.classnd(1:crp.prenumclass).*probs./(data.numdata+crp.alpha-1);
-        pro
-        crp.predataclass(ii) = randmult();
+        probs(1:crp.prenumclass) = crp.classnd(1:crp.prenumclass).*...
+            probs(1:crp.prenumclass)./(ii+crp.alpha-1);
+        probs(crp.prenumclass+1) = crp.alpha / (ii+crp.alpha-1) * ...
+            multigaussian(data.ss(ii,:)', 0, 0, 'z_new');
+        crp.predataclass(ii) = randmult(probs, crp.prenumclass+1);
+        if crp.predataclass(ii) == crp.prenumclass+1,
+            crp.prenumclass = crp.prenumclass + 1;
+        end
         crp.classnd(crp.predataclass(ii)) = crp.classnd(crp.predataclass(ii)) + 1;
     end    
-end
-
-% 
-
-% data category clean
-numclass = crp.prenumclass;
-for ii=crp.prenumclass:-1:1,
-    % empty category
-    if crp.classnd(ii) == 0,
-        numclass = numclass - 1;
-        idx = find(crp.predataclass > ii);
-        crp.predataclass(idx) = crp.predataclass(idx) - 1;
-        crp.classnd(ii:end-1) = crp.classnd(ii+1:end);
-        crp.classnd(end) = 0;
-    end
 end

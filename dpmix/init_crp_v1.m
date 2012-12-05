@@ -1,4 +1,4 @@
-function crp = init_crp(data, alpha)
+function crp = init_crp_v1(data, alpha)
 %
 %   INITCRP doing some initialization work for CRP, including
 %     randomly partitioning data,
@@ -20,7 +20,7 @@ crp.alpha = alpha;
 
 % randomly partition data
 for ii=1:data.numdata,
-    crp.predataclass(ii) = randmult(repmat(1, 1, data.numdata)/data.numdata);
+    crp.predataclass(ii) = randmult(repmat(1, 1, data.numdata)/data.numdata, data.numdata);
     crp.classnd(crp.predataclass(ii)) = crp.classnd(crp.predataclass(ii)) + 1;
 end
 
@@ -36,3 +36,4 @@ for ii=crp.prenumclass:-1:1,
         crp.classnd(end) = 0;
     end
 end
+crp.prenumclass = numclass;

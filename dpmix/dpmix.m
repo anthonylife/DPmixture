@@ -57,7 +57,7 @@ for iter=1:numiter,
 end
 
 % (3)==============================
-% final training and ploting
+% final evaluation and plot
 
 
 
